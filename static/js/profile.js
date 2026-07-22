@@ -35,26 +35,26 @@ if (avatarInitials) {
 
 async function loadProfileData() {
     if (!userIdentifier) {
-        if (historyContainer) {
-            historyContainer.innerHTML = `
-                <div style="text-align: center; padding: 40px; background: white; border-radius: 16px; border: 1px solid var(--border);">
-                    <p style="color: #64748b; font-weight: 600;">No student details found. Please log in first.</p>
-                    <button onclick="window.location.href='index.html'" class="primary-btn" style="width: auto; padding: 10px 24px; margin-top: 16px;">Go to Login Page 🔑</button>
-                </div>
-            `;
-        }
+        renderLocalProfileFallback();
         return;
     }
 
     try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2000);
+
         let response;
         try {
-            response = await fetch(`${API_BASE}/api/user/${encodeURIComponent(userIdentifier)}`);
+            response = await fetch(`${API_BASE}/api/user/${encodeURIComponent(userIdentifier)}`, { signal: controller.signal });
+            clearTimeout(timeoutId);
         } catch (netErr) {
-            // Fallback attempt to http://127.0.0.1:5050 if relative fetch failed
-            response = await fetch(`http://127.0.0.1:5050/api/user/${encodeURIComponent(userIdentifier)}`);
+            clearTimeout(timeoutId);
+            renderLocalProfileFallback();
+            return;
         }
+
         const data = await response.json();
+
 
         if (response.ok && data.status === "success") {
             const u = data.user || {};
@@ -236,9 +236,14 @@ document.addEventListener("DOMContentLoaded", loadProfileData);
 // Global Logout helper
 window.logoutUser = function() {
     localStorage.clear();
-    if (window.location.pathname.endsWith(".html") || window.location.protocol === "file:") {
-        window.location.href = "index.html";
-    } else {
-        window.location.href = "/";
-    }
+    sessionStorage.clear();
+    window.location.href = "index.html";
 };
+
+document.querySelectorAll(".logout-btn").forEach(btn => {
+    btn.addEventListener("click", function(e) {
+        e.preventDefault();
+        window.logoutUser();
+    });
+});
+

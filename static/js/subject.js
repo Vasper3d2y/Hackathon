@@ -366,4 +366,18 @@ if (createQuizForm) {
 }
 
 // Load subjects on page load
-document.addEventListener("DOMContentLoaded", loadSubjects);
+document.addEventListener("DOMContentLoaded", function() {
+    loadSubjects();
+    document.querySelectorAll(".logout-btn").forEach(btn => {
+        btn.addEventListener("click", function(e) {
+            e.preventDefault();
+            window.logoutUser();
+        });
+    });
+});
+
+window.logoutUser = function() {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = "index.html";
+};
