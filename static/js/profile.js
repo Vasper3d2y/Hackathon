@@ -4,40 +4,55 @@ const API_BASE = (window.location.hostname === "localhost" || window.location.ho
 
 
 
-const rollNumber = localStorage.getItem("rollNumber") || "";
-const localName = localStorage.getItem("studentName") || "Student";
-const localEmail = localStorage.getItem("email") || "Not Provided";
-const localYear = localStorage.getItem("year") || "N/A";
-const localBatch = localStorage.getItem("batch") || "N/A";
+function initProfileUI() {
+    const localName = localStorage.getItem("studentName") || "Student";
+    const localEmail = localStorage.getItem("email") || "Not Provided";
+    const localYear = localStorage.getItem("year") || "N/A";
+    const localBatch = localStorage.getItem("batch") || "N/A";
+    const rollNumber = localStorage.getItem("rollNumber") || "000";
 
-const avatarInitials = document.getElementById("avatarInitials");
-const profStudentName = document.getElementById("profStudentName");
-const profEmail = document.getElementById("profEmail");
-const profRoll = document.getElementById("profRoll");
-const profYear = document.getElementById("profYear");
-const profBatch = document.getElementById("profBatch");
+    const profStudentName = document.getElementById("profStudentName");
+    const profEmail = document.getElementById("profEmail");
+    const profRoll = document.getElementById("profRoll");
+    const profYear = document.getElementById("profYear");
+    const profBatch = document.getElementById("profBatch");
+    const avatarInitials = document.getElementById("avatarInitials");
 
-const statTotalTests = document.getElementById("statTotalTests");
-const statAvgScore = document.getElementById("statAvgScore");
-const statPassCount = document.getElementById("statPassCount");
-const historyContainer = document.getElementById("profileHistoryContainer");
+    if (profStudentName) profStudentName.textContent = localName;
+    if (profEmail && localEmail !== "Not Provided") profEmail.textContent = localEmail;
+    if (profRoll) profRoll.textContent = rollNumber || "000";
+    if (profYear) profYear.textContent = localYear;
+    if (profBatch) profBatch.textContent = localBatch;
 
-const userIdentifier = localStorage.getItem("email") || localStorage.getItem("studentName") || localStorage.getItem("rollNumber") || "Student";
-
-// Set initial fallback values from local storage
-if (profStudentName) profStudentName.textContent = localName;
-if (profEmail && localEmail !== "Not Provided") profEmail.textContent = localEmail;
-if (profRoll) profRoll.textContent = rollNumber || "000";
-if (profYear) profYear.textContent = localYear;
-if (profBatch) profBatch.textContent = localBatch;
-
-if (avatarInitials) {
-    const parts = localName.trim().split(" ");
-    const initials = parts.length > 1 ? (parts[0][0] + parts[1][0]) : (parts[0][0] || "ST");
-    avatarInitials.textContent = initials.toUpperCase();
+    if (avatarInitials) {
+        const parts = localName.trim().split(" ");
+        const initials = parts.length > 1 ? (parts[0][0] + parts[1][0]) : (parts[0][0] || "ST");
+        avatarInitials.textContent = initials.toUpperCase();
+    }
 }
 
 async function loadProfileData() {
+    initProfileUI();
+
+    const historyContainer = document.getElementById("profileHistoryContainer");
+    const statTotalTests = document.getElementById("statTotalTests");
+    const statAvgScore = document.getElementById("statAvgScore");
+    const statPassCount = document.getElementById("statPassCount");
+    const profStudentName = document.getElementById("profStudentName");
+    const profEmail = document.getElementById("profEmail");
+    const profRoll = document.getElementById("profRoll");
+    const profYear = document.getElementById("profYear");
+    const profBatch = document.getElementById("profBatch");
+    const avatarInitials = document.getElementById("avatarInitials");
+
+    const localName = localStorage.getItem("studentName") || "Student";
+    const localEmail = localStorage.getItem("email") || "Not Provided";
+    const localYear = localStorage.getItem("year") || "N/A";
+    const localBatch = localStorage.getItem("batch") || "N/A";
+    const rollNumber = localStorage.getItem("rollNumber") || "";
+
+    const userIdentifier = localStorage.getItem("email") || localStorage.getItem("studentName") || localStorage.getItem("rollNumber") || "Student";
+
     if (!userIdentifier) {
         renderLocalProfileFallback();
         return;
@@ -56,6 +71,7 @@ async function loadProfileData() {
             renderLocalProfileFallback();
             return;
         }
+
 
 
         const data = await response.json();
@@ -155,7 +171,13 @@ async function loadProfileData() {
 }
 
 function renderLocalProfileFallback() {
+    const historyContainer = document.getElementById("profileHistoryContainer");
+    const statTotalTests = document.getElementById("statTotalTests");
+    const statAvgScore = document.getElementById("statAvgScore");
+    const statPassCount = document.getElementById("statPassCount");
+
     const history = JSON.parse(localStorage.getItem("localHistory") || "[]");
+
     
     // Compute local metrics
     const totalTests = history.length;
