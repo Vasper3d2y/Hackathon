@@ -128,7 +128,11 @@ def init_db():
     conn.commit()
     conn.close()
 
+# Auto-initialize database tables on module import (crucial for gunicorn)
+init_db()
+
 # HTML URL Routing & Aliases
+
 @app.route('/')
 @app.route('/index.html')
 def index_page():
