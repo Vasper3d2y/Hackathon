@@ -21,7 +21,10 @@ const statAvgScore = document.getElementById("statAvgScore");
 const statPassCount = document.getElementById("statPassCount");
 const historyContainer = document.getElementById("profileHistoryContainer");
 
-const userIdentifier = (localEmail && localEmail !== "Not Provided") ? localEmail : rollNumber;
+const userIdentifier = (localEmail && localEmail !== "Not Provided") 
+    ? localEmail 
+    : ((rollNumber && rollNumber !== "000") ? rollNumber : "101");
+
 
 // Set initial fallback values from local storage
 if (profStudentName) profStudentName.textContent = localName;
