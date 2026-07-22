@@ -1,6 +1,7 @@
 const API_BASE = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
     ? (window.location.port === "5050" ? "" : "http://127.0.0.1:5050")
-    : "https://hackathon-in7t.onrender.com";
+    : "";
+
 
 
 // Display Student Name

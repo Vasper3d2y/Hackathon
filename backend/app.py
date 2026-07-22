@@ -493,21 +493,24 @@ def api_get_user_profile(identifier):
     roll = u_dict.get('roll_number', target)
     s_name = u_dict.get('student_name', target if not '@' in target and not target.isdigit() else '')
 
-    if s_name:
-        cursor.execute('''
-            SELECT id, student_name, roll_number, subject, score, total, submitted_at 
-            FROM results 
-            WHERE roll_number = ? OR LOWER(student_name) = LOWER(?) OR LOWER(student_name) LIKE '%' || LOWER(?) || '%'
-            ORDER BY id DESC
-        ''', (roll, s_name, s_name))
-    else:
+    cursor.execute('''
+        SELECT id, student_name, roll_number, subject, score, total, submitted_at 
+        FROM results 
+        WHERE roll_number = ? OR LOWER(student_name) = LOWER(?) OR (LOWER(?) != '' AND LOWER(student_name) LIKE '%' || LOWER(?) || '%')
+        ORDER BY id DESC
+    ''', (roll, s_name, s_name, s_name))
+    result_rows = cursor.fetchall()
+
+    if not result_rows:
         cursor.execute('''
             SELECT id, student_name, roll_number, subject, score, total, submitted_at 
             FROM results 
             ORDER BY id DESC
         ''')
-    result_rows = cursor.fetchall()
+        result_rows = cursor.fetchall()
+
     conn.close()
+
 
 
     user_info = {
