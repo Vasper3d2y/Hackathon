@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard Quiz - Student Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="logo-icon">⚡</span>
+            <h2>Flashcard Quiz</h2>
+        </div>
+        <div class="nav-links">
+            <a href="subjects.html" class="nav-link">📚 Subjects</a>
+            <a href="profile.html" class="nav-link profile-nav-btn">👤 Profile</a>
+        </div>
+    </nav>
+
+    <main class="container">
+
+        <h1>Interactive Flashcard & Quiz Platform</h1>
+        <p class="subtitle">
+            Learn Smarter with Interactive Quizzes & Real-Time Assessment
+        </p>
+
+        <div class="student-card">
+
+            <div class="auth-tabs">
+                <button type="button" class="auth-tab active" id="tabLogin" data-mode="login">
+                    🔑 Log In
+                </button>
+                <button type="button" class="auth-tab" id="tabRegister" data-mode="register">
+                    📝 Create Account
+                </button>
+            </div>
+
+            <div class="card-header">
+                <h2 id="cardTitle">Log In to Portal</h2>
+                <p id="cardSubtitle">Enter your Name and Email Address to log in</p>
+            </div>
+
+            <div class="form-group">
+                <label for="studentName">Student Name <span style="color: #ef4444;">*</span></label>
+                <input
+                    type="text"
+                    id="studentName"
+                    placeholder="e.g. JOHN DOE"
+                    autocomplete="off"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="studentEmail">Email Address <span style="color: #ef4444;">*</span></label>
+                <input
+                    type="email"
+                    id="studentEmail"
+                    placeholder="e.g. student@example.com"
+                    autocomplete="off"
+                    required
+                >
+            </div>
+
+            <!-- Registration Only Fields -->
+            <div class="form-group register-only" id="rollGroup" style="display: none;">
+                <label for="rollNumber">Roll Number (3 Digits) <span style="color: #ef4444;">*</span></label>
+                <input
+                    type="text"
+                    id="rollNumber"
+                    placeholder="e.g. 101"
+                    maxlength="3"
+                    pattern="\d{3}"
+                    inputmode="numeric"
+                    autocomplete="off"
+                >
+            </div>
+
+            <div class="row register-only" id="academicRow" style="display: none;">
+
+                <div class="form-group">
+                    <label for="year">Academic Year <span style="color: #ef4444;">*</span></label>
+                    <select id="year">
+                        <option value="">Select Year</option>
+                        <option value="First Year">First Year</option>
+                        <option value="Second Year">Second Year</option>
+                        <option value="Third Year">Third Year</option>
+                        <option value="Fourth Year">Fourth Year</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="batch">Batch <span style="color: #ef4444;">*</span></label>
+                    <select id="batch">
+                        <option value="">Batch</option>
+                        <option value="A">Batch A</option>
+                        <option value="B">Batch B</option>
+                        <option value="C">Batch C</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <button id="loginBtn">
+                <span id="btnText">Log In to Portal</span> →
+            </button>
+
+            <div id="loginFeedback" class="feedback-msg"></div>
+
+        </div>
+
+    </main>
+
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/ai-tutor-widget.js"></script>
+
+</body>
+</html>

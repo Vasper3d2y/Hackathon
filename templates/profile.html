@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile & Quiz History - Flashcard Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand" style="cursor: pointer;" onclick="window.location.href='subjects.html'">
+            <span class="logo-icon">⚡</span>
+            <h2>Flashcard Quiz</h2>
+        </div>
+        <div class="nav-links">
+            <a href="subjects.html" class="nav-link">📚 Subjects</a>
+            <a href="profile.html" class="nav-link profile-nav-btn">👤 Profile</a>
+            <a href="#" onclick="logoutUser(); return false;" class="nav-link logout-btn" style="color: #ef4444;">🚪 Log Out</a>
+        </div>
+    </nav>
+
+    <main class="container">
+
+        <!-- Profile Header Card -->
+        <div class="profile-header-card">
+            <div class="avatar-circle" id="avatarInitials">ST</div>
+            <div class="profile-info">
+                <h1 id="profStudentName">Student Name</h1>
+                <p id="profEmail" class="profile-email">student@example.com</p>
+                <div class="profile-meta-tags">
+                    <span class="meta-tag">Roll #: <strong id="profRoll">000</strong></span>
+                    <span class="meta-tag">Year: <strong id="profYear">N/A</strong></span>
+                    <span class="meta-tag">Batch: <strong id="profBatch">N/A</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrics Dashboard Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📝</div>
+                <div class="stat-value" id="statTotalTests">0</div>
+                <div class="stat-label">Quizzes Attempted</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-value" id="statAvgScore">0%</div>
+                <div class="stat-label">Average Accuracy</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-value" id="statPassCount">0</div>
+                <div class="stat-label">Quizzes Passed</div>
+            </div>
+        </div>
+
+        <!-- History Card List Section -->
+        <div class="review-section" style="width: 100%; margin-top: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                <h2>📜 Attempted Quiz History</h2>
+                <button onclick="window.location.href='subjects.html'" class="secondary-btn" style="width: auto; padding: 8px 16px; font-size: 14px;">Take New Quiz 🚀</button>
+            </div>
+            
+            <div id="profileHistoryContainer" class="review-list">
+                <div class="loading-state">
+                    <div class="spinner"></div>
+                    <p>Loading history from database...</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="/static/js/profile.js"></script>
+    <script src="/static/js/ai-tutor-widget.js"></script>
+
+</body>
+</html>
+

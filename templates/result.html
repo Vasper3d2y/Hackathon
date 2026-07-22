@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Result - Flashcard Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="logo-icon">⚡</span>
+            <h2>Flashcard Quiz</h2>
+        </div>
+        <div class="nav-links">
+            <div class="user-badge" id="resStudentBadge">Student Portal</div>
+            <a href="profile.html" class="nav-link profile-nav-btn">👤 Profile</a>
+            <a href="#" onclick="logoutUser(); return false;" class="nav-link logout-btn" style="color: #ef4444;">🚪 Log Out</a>
+        </div>
+    </nav>
+
+    <main class="result-container">
+
+        <!-- Result Summary Card -->
+        <div class="result-card">
+            <div class="result-badge" id="performanceBadge">Quiz Completed</div>
+            <h1 id="resultTitle">Quiz Completed!</h1>
+            <p class="subtitle" id="subjectSubtitle">Subject Assessment Summary</p>
+
+            <div class="score-display">
+                <div class="score-circle">
+                    <span class="score-num" id="scoreNum">0</span>
+                    <span class="score-divider">/</span>
+                    <span class="total-num" id="totalNum">5</span>
+                </div>
+                <div class="percentage-text" id="percentageText">0%</div>
+            </div>
+
+            <div class="db-status-badge">✓ Result Recorded in Database</div>
+
+            <div class="action-buttons">
+                <button id="retakeBtn" class="primary-btn">🔄 Retake Quiz</button>
+                <button id="changeSubjectBtn" class="secondary-btn">📚 Choose Another Subject</button>
+            </div>
+        </div>
+
+        <!-- Answer Review Section -->
+        <div class="review-section">
+            <h2>Detailed Review & Solutions</h2>
+            <div id="reviewContainer" class="review-list">
+                <!-- Answer items populated dynamically by result.js -->
+            </div>
+        </div>
+
+        <!-- User Previous Quiz History Section -->
+        <div class="review-section" style="margin-top: 32px;">
+            <h2>📜 Previous Attempts History (Database)</h2>
+            <div id="historyContainer" class="review-list">
+                <p style="color: #64748b; text-align: center; padding: 20px;">Loading quiz history from database...</p>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="/static/js/result.js"></script>
+    <script src="/static/js/ai-tutor-widget.js"></script>
+
+</body>
+</html>
+

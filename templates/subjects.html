@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Subject - Flashcard Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="logo-icon">⚡</span>
+            <h2>Flashcard Quiz</h2>
+        </div>
+        <div class="nav-links">
+            <div class="user-badge" id="userBadge">Student Portal</div>
+            <a href="profile.html" class="nav-link profile-nav-btn">👤 Profile</a>
+            <a href="#" onclick="logoutUser(); return false;" class="nav-link logout-btn" style="color: #ef4444;">🚪 Log Out</a>
+        </div>
+    </nav>
+
+    <main class="subject-container">
+
+        <div class="subject-header-row">
+            <div>
+                <h1 id="welcome">Welcome, Student 👋</h1>
+                <p class="subtitle">Choose a subject to test your knowledge or build your own custom flashcards!</p>
+            </div>
+            <button id="openCreateBtn" class="create-quiz-trigger-btn">
+                <span>✨ Create Custom Quiz</span>
+            </button>
+        </div>
+
+        <!-- Subject Cards Grid (Populated dynamically) -->
+        <div class="subject-grid" id="subjectGrid">
+            <div class="loading-state">
+                <div class="spinner"></div>
+                <p>Loading available quiz subjects...</p>
+            </div>
+        </div>
+
+        <!-- Create Flashcard Quiz Modal / Card Container -->
+        <div class="creator-modal-backdrop" id="creatorModal" style="display: none;">
+            <div class="creator-card">
+
+                <div class="creator-header">
+                    <div>
+                        <h2>✨ Create Custom Flashcard Quiz</h2>
+                        <p>Fill in subject details and add up to 5 custom questions (5 questions limit).</p>
+                    </div>
+                    <button type="button" class="close-modal-btn" id="closeCreateBtn">✕</button>
+                </div>
+
+                <div id="creatorFeedback" class="feedback-msg" style="display: none;"></div>
+
+                <form id="createQuizForm">
+
+                    <!-- Section 1: Subject Details -->
+                    <div class="creator-section">
+                        <h3 class="section-title">1. Subject Details</h3>
+                        <div class="row">
+                            <div class="form-group" style="flex: 2;">
+                                <label for="newSubjectName">Subject Name <span style="color: #ef4444;">*</span></label>
+                                <input type="text" id="newSubjectName" placeholder="e.g. Python Programming, Machine Learning" required autocomplete="off">
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label for="newSubjectIcon">Icon</label>
+                                <select id="newSubjectIcon">
+                                    <option value="⚡">⚡ Lightning</option>
+                                    <option value="🐍">🐍 Python</option>
+                                    <option value="💻">💻 Code</option>
+                                    <option value="🧠">🧠 AI & ML</option>
+                                    <option value="🌐">🌐 Web Tech</option>
+                                    <option value="🚀">🚀 Rocket</option>
+                                    <option value="📚">📚 Book</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newSubjectDesc">Subject Description <span style="color: #ef4444;">*</span></label>
+                            <input type="text" id="newSubjectDesc" placeholder="e.g. Core concepts, syntax rules, and algorithms" required autocomplete="off">
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Questions Builder (Strict 5 Question Limit) -->
+                    <div class="creator-section">
+                        <div class="section-header-flex">
+                            <h3 class="section-title">2. Flashcard Questions (<span id="qCountBadge">1/5</span> Created)</h3>
+                            <span class="limit-badge">Strict 5 Questions Limit</span>
+                        </div>
+
+                        <!-- Question Step Tabs (1 to 5) -->
+                        <div class="q-tabs-row" id="qTabsRow">
+                            <button type="button" class="q-tab active" data-qindex="0">Q1</button>
+                            <button type="button" class="q-tab" data-qindex="1">Q2</button>
+                            <button type="button" class="q-tab" data-qindex="2">Q3</button>
+                            <button type="button" class="q-tab" data-qindex="3">Q4</button>
+                            <button type="button" class="q-tab" data-qindex="4">Q5</button>
+                        </div>
+
+                        <!-- Question Form Container -->
+                        <div class="question-builder-box">
+                            <div class="form-group">
+                                <label for="qText">Question <span id="currentQNum">1</span> Text <span style="color: #ef4444;">*</span></label>
+                                <textarea id="qText" rows="2" placeholder="Enter your question here..." required></textarea>
+                            </div>
+
+                            <div class="options-inputs-grid">
+                                <div class="form-group">
+                                    <label for="optA">Option A <span style="color: #ef4444;">*</span></label>
+                                    <input type="text" id="optA" placeholder="First option" required autocomplete="off">
+                                </div>
+                                <div class="form-group">
+                                    <label for="optB">Option B <span style="color: #ef4444;">*</span></label>
+                                    <input type="text" id="optB" placeholder="Second option" required autocomplete="off">
+                                </div>
+                                <div class="form-group">
+                                    <label for="optC">Option C <span style="color: #ef4444;">*</span></label>
+                                    <input type="text" id="optC" placeholder="Third option" required autocomplete="off">
+                                </div>
+                                <div class="form-group">
+                                    <label for="optD">Option D <span style="color: #ef4444;">*</span></label>
+                                    <input type="text" id="optD" placeholder="Fourth option" required autocomplete="off">
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-top: 12px;">
+                                <label for="correctOption">Select Correct Option <span style="color: #ef4444;">*</span></label>
+                                <select id="correctOption">
+                                    <option value="0">Option A is Correct</option>
+                                    <option value="1">Option B is Correct</option>
+                                    <option value="2">Option C is Correct</option>
+                                    <option value="3">Option D is Correct</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="creator-actions">
+                        <button type="button" class="secondary-btn" id="prevQBtn" style="width: auto;" disabled>← Prev Question</button>
+                        <button type="button" class="secondary-btn" id="nextQBtn" style="width: auto;">Next Question →</button>
+                        <button type="submit" class="primary-btn submit-btn" id="saveQuizBtn" style="width: auto; margin-left: auto;">
+                            Save & Publish Quiz 🚀
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="/static/js/subject.js"></script>
+    <script src="/static/js/ai-tutor-widget.js"></script>
+
+</body>
+</html>
+

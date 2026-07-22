@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Quiz - Flashcard Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="logo-icon">⚡</span>
+            <h2>Flashcard Quiz</h2>
+        </div>
+        <div class="nav-links">
+            <div class="user-badge" id="quizSubjectBadge">Quiz</div>
+            <a href="profile.html" class="nav-link profile-nav-btn">👤 Profile</a>
+            <a href="#" onclick="logoutUser(); return false;" class="nav-link logout-btn" style="color: #ef4444;">🚪 Log Out</a>
+        </div>
+    </nav>
+
+    <main class="quiz-container">
+
+        <!-- Progress Header -->
+        <div class="quiz-header">
+            <div class="progress-info">
+                <span id="questionCounter">Question 1 of 5</span>
+                <span id="subjectNameTag" class="subject-tag">Subject</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressFill" style="width: 20%;"></div>
+            </div>
+        </div>
+
+        <!-- Quiz Card -->
+        <div class="quiz-card" id="quizCard">
+            <div class="loading-state" id="loadingState">
+                <div class="spinner"></div>
+                <p>Loading questions from database...</p>
+            </div>
+
+            <div class="question-content" id="questionContent" style="display: none;">
+                <h2 id="questionText" class="question-text">Loading question...</h2>
+
+                <div class="options-grid" id="optionsContainer">
+                    <!-- Options populated dynamically by quiz.js -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Action Controls -->
+        <div class="quiz-actions">
+            <button id="prevBtn" class="secondary-btn" disabled>← Previous</button>
+            <button id="nextBtn" class="primary-btn">Next →</button>
+            <button id="submitBtn" class="submit-btn" style="display: none;">Submit Quiz ✓</button>
+        </div>
+
+    </main>
+
+    <script src="/static/js/quiz.js"></script>
+    <script src="/static/js/ai-tutor-widget.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,16 @@
+# Environment variables
+# .env (tracked with placeholder keys)
+
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+
+# Database storage
+*.db
+backend/database/*.db
+
+# IDE & OS files
+.DS_Store
+.vscode/
+.idea/
