@@ -41,10 +41,37 @@ async function fetchQuestions() {
             showError("No questions found in database for " + currentSubject);
         }
     } catch (err) {
-        console.error("Error fetching questions from Flask backend:", err);
-        showError(`Could not connect to backend server at http://127.0.0.1:5050. Please ensure 'python3 app.py' is running.`);
+        console.warn("Backend server offline or static hosting, using client fallback question sets:", err);
+        const FALLBACK_QUESTION_SETS = {
+            "C programming": [
+                { id: 1, question_text: "Which keyword is used to declare an integer variable in C?", options: ["int", "float", "string", "var"], correct_option: 0 },
+                { id: 2, question_text: "Which symbol is used for dereferencing a pointer in C?", options: ["&", "*", "->", "%"], correct_option: 1 },
+                { id: 3, question_text: "What does the printf() function do in C?", options: ["Takes user input", "Prints output to console", "Allocates memory", "Terminates program"], correct_option: 1 },
+                { id: 4, question_text: "Which header file is used for standard input/output?", options: ["<conio.h>", "<stdlib.h>", "<stdio.h>", "<string.h>"], correct_option: 2 },
+                { id: 5, question_text: "What is the return type of the main() function in C?", options: ["void", "int", "char", "float"], correct_option: 1 }
+            ],
+            "Web hosting": [
+                { id: 1, question_text: "What protocol is used to transfer files to a web host?", options: ["HTTP", "SFTP / FTP", "DNS", "SMTP"], correct_option: 1 },
+                { id: 2, question_text: "What does DNS stand for in web hosting?", options: ["Digital Network System", "Domain Name System", "Direct Node Server", "Data Network Storage"], correct_option: 1 },
+                { id: 3, question_text: "Which hosting type shares server hardware with multiple sites?", options: ["Dedicated Hosting", "VPS Hosting", "Shared Hosting", "Colocation"], correct_option: 2 },
+                { id: 4, question_text: "What is an SSL certificate used for?", options: ["Speeding up website load time", "Encrypting HTTP traffic (HTTPS)", "Managing domain registration", "Storing database records"], correct_option: 1 },
+                { id: 5, question_text: "Which port is used by default for HTTP traffic?", options: ["443", "21", "80", "22"], correct_option: 2 }
+            ],
+            "Python": [
+                { id: 1, question_text: "Which data type is immutable in Python?", options: ["List", "Dictionary", "Tuple", "Set"], correct_option: 2 },
+                { id: 2, question_text: "How do you define a function in Python?", options: ["def myFunc():", "function myFunc()", "func myFunc()", "define myFunc()"], correct_option: 0 },
+                { id: 3, question_text: "What is the output of print(type([])) in Python?", options: ["<class 'tuple'>", "<class 'list'>", "<class 'dict'>", "<class 'array'>"], correct_option: 1 },
+                { id: 4, question_text: "Which library is commonly used for data manipulation in Python?", options: ["pandas", "requests", "flask", "pytest"], correct_option: 0 },
+                { id: 5, question_text: "What does list comprehension provide in Python?", options: ["A concise way to create lists", "A way to encrypt data", "A database connection tool", "A multi-threading library"], correct_option: 0 }
+            ]
+        };
+
+        const fallback = FALLBACK_QUESTION_SETS[currentSubject] || FALLBACK_QUESTION_SETS["Python"] || FALLBACK_QUESTION_SETS["C programming"];
+        questions = fallback;
+        renderQuestion(0);
     }
 }
+
 
 function showError(msg) {
     if (loadingState) {
