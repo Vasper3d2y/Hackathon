@@ -5,7 +5,10 @@ const score = parseInt(localStorage.getItem("quizScore") || "0", 10);
 const total = parseInt(localStorage.getItem("quizTotal") || "5", 10);
 const details = JSON.parse(localStorage.getItem("quizDetails") || "[]");
 
-const API_BASE = (window.location.port === "5050") ? "" : "http://127.0.0.1:5050";
+const API_BASE = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+    ? (window.location.port === "5050" ? "" : "http://127.0.0.1:5050")
+    : "https://hackathon-in7t.onrender.com";
+
 
 const resStudentBadge = document.getElementById("resStudentBadge");
 const resultTitle = document.getElementById("resultTitle");
@@ -85,63 +88,79 @@ if (reviewContainer && details.length > 0) {
     });
 }
 
-// Fetch Previous Quiz Attempts History from Database
 async function fetchUserHistory() {
     const historyContainer = document.getElementById("historyContainer");
-    if (!historyContainer || !rollNumber) {
-        if (historyContainer) historyContainer.innerHTML = "<p style='color: #64748b; text-align: center; padding: 20px;'>No student roll number found.</p>";
-        return;
-    }
+    if (!historyContainer) return;
+
+    const activeRoll = localStorage.getItem("email") || localStorage.getItem("rollNumber") || "101";
 
     try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2500);
+
         let response;
         try {
-            response = await fetch(`${API_BASE}/api/results/${encodeURIComponent(rollNumber)}`);
+            response = await fetch(`${API_BASE}/api/results/${encodeURIComponent(activeRoll)}`, { signal: controller.signal });
+            clearTimeout(timeoutId);
         } catch (netErr) {
-            response = await fetch(`http://127.0.0.1:5050/api/results/${encodeURIComponent(rollNumber)}`);
+            clearTimeout(timeoutId);
+            renderResultLocalHistoryFallback(historyContainer);
+            return;
         }
+
         const data = await response.json();
 
         if (response.ok && data.status === "success" && data.history && data.history.length > 0) {
-            historyContainer.innerHTML = "";
-            data.history.forEach((attempt) => {
-                const item = document.createElement("div");
-                item.className = "review-card";
-                item.style.marginBottom = "12px";
-                item.style.padding = "16px 20px";
-                item.style.display = "flex";
-                item.style.justifyContent = "space-between";
-                item.style.alignItems = "center";
-                item.style.flexWrap = "wrap";
-                item.style.gap = "10px";
-
-                const isPassed = attempt.percentage >= 60;
-                const statusBadge = isPassed 
-                    ? `<span class="tag-correct" style="padding: 4px 12px; border-radius: 20px; font-weight: 600; font-size: 13px;">Passed (${attempt.percentage}%)</span>`
-                    : `<span class="tag-wrong" style="padding: 4px 12px; border-radius: 20px; font-weight: 600; font-size: 13px;">Needs Practice (${attempt.percentage}%)</span>`;
-
-                item.innerHTML = `
-                    <div>
-                        <h4 style="margin: 0 0 4px 0; font-size: 16px; color: var(--text-dark, #0f172a);">${escapeHtml(attempt.subject)}</h4>
-                        <span style="font-size: 13px; color: #64748b;">Roll: <strong>${escapeHtml(attempt.roll_number)}</strong> • Date: ${attempt.submitted_at ? attempt.submitted_at : 'Recent'}</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 16px;">
-                        <span style="font-size: 16px; font-weight: 700;">${attempt.score} / ${attempt.total}</span>
-                        ${statusBadge}
-                    </div>
-                `;
-                historyContainer.appendChild(item);
-            });
+            renderHistoryCards(historyContainer, data.history);
         } else {
-            historyContainer.innerHTML = "<p style='color: #64748b; text-align: center; padding: 20px;'>No previous quiz history recorded in database for Roll #" + escapeHtml(rollNumber) + " yet.</p>";
+            renderResultLocalHistoryFallback(historyContainer);
         }
     } catch (e) {
-        console.error("Error fetching history:", e);
-        if (historyContainer) {
-            historyContainer.innerHTML = "<p style='color: #ef4444; text-align: center; padding: 20px;'>Could not load quiz history from database server.</p>";
-        }
+        renderResultLocalHistoryFallback(historyContainer);
     }
 }
+
+function renderHistoryCards(container, history) {
+    container.innerHTML = "";
+    history.forEach((attempt) => {
+        const item = document.createElement("div");
+        item.className = "review-card";
+        item.style.marginBottom = "12px";
+        item.style.padding = "16px 20px";
+        item.style.display = "flex";
+        item.style.justifyContent = "space-between";
+        item.style.alignItems = "center";
+        item.style.flexWrap = "wrap";
+        item.style.gap = "10px";
+
+        const isPassed = attempt.percentage >= 60;
+        const statusBadge = isPassed 
+            ? `<span class="tag-correct" style="padding: 4px 12px; border-radius: 20px; font-weight: 600; font-size: 13px;">Passed (${attempt.percentage}%)</span>`
+            : `<span class="tag-wrong" style="padding: 4px 12px; border-radius: 20px; font-weight: 600; font-size: 13px;">Needs Practice (${attempt.percentage}%)</span>`;
+
+        item.innerHTML = `
+            <div>
+                <h4 style="margin: 0 0 4px 0; font-size: 16px; color: var(--text-dark, #0f172a);">${escapeHtml(attempt.subject)}</h4>
+                <span style="font-size: 13px; color: #64748b;">Completed: <strong>${attempt.submitted_at ? attempt.submitted_at : 'Recent'}</strong></span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <span style="font-size: 16px; font-weight: 700;">${attempt.score} / ${attempt.total}</span>
+                ${statusBadge}
+            </div>
+        `;
+        container.appendChild(item);
+    });
+}
+
+function renderResultLocalHistoryFallback(container) {
+    const localHistory = JSON.parse(localStorage.getItem("localHistory") || "[]");
+    if (localHistory.length > 0) {
+        renderHistoryCards(container, localHistory);
+    } else {
+        container.innerHTML = "<p style='color: #64748b; text-align: center; padding: 20px;'>No previous quiz history recorded yet.</p>";
+    }
+}
+
 
 function escapeHtml(str) {
     return str
