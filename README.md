@@ -95,8 +95,9 @@ Hackathon/
 - Real-time progress bar, option selection highlighting, option navigation, and automatic score calculation.
 
 ### 4. AI Tutor Right-Side Chat Sidebar (`static/js/ai-tutor-widget.js` & `backend/app.py`)
-- Floating **🤖 AI Tutor** button in the bottom-right corner across all pages.
+- Compact **Right-Edge Arrow Tab Handle (`◀`)** fixed on the far-right edge of the screen.
 - Right-side slide-out glassmorphic drawer overlay.
+
 - **Context-Aware**: Auto-detects active subject context (e.g. `📚 Context: Web Development`).
 - **Pedagogical AI**: Powered by Gemini (`gemini-2.0-flash`) via `POST /api/tutor/chat`.
 - **Subscript & Math Renderer**: Automatically formats chemical formulas (`H₂O`, `CO₂`, `C₆H₁₂O<sub>6</sub>`) and LaTeX arrows without displaying raw code symbols.

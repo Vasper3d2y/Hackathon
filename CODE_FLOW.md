@@ -51,8 +51,9 @@ sequenceDiagram
     Browser->>Browser: Save score details in localStorage & redirect to /result
 
     Note over Student, AI Service: 5. AI Tutor Right-Side Chat Sidebar Widget
-    Student->>Browser: Clicks floating 🤖 AI Tutor FAB button
+    Student->>Browser: Clicks compact right-edge arrow tab handle (◀)
     Browser->>Browser: Open right sidebar drawer & detect page subject context
+
     Student->>Browser: Asks question or clicks suggestion chip ("Explain photosynthesis")
     Browser->>Flask Backend: POST /api/tutor/chat { message, subject, student_name }
     Flask Backend->>AI Service: make_request(prompt, model="gemini-2.0-flash")
