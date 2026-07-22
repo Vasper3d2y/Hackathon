@@ -1,0 +1,45 @@
+# ==============================================================================
+# Netlify Deployment Configuration for Hackathon Flashcard & AI Tutor Platform
+# ==============================================================================
+
+[build]
+  publish = "."
+  command = "pip install -r requirements.txt"
+
+# Set default Environment Variables (Configured in Netlify Dashboard)
+[build.environment]
+  PYTHON_VERSION = "3.11"
+
+# Client-side Redirects for Netlify Web Hosting
+[[redirects]]
+  from = "/"
+  to = "/templates/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/subjects"
+  to = "/templates/subjects.html"
+  status = 200
+
+[[redirects]]
+  from = "/quiz"
+  to = "/templates/quiz.html"
+  status = 200
+
+[[redirects]]
+  from = "/result"
+  to = "/templates/result.html"
+  status = 200
+
+[[redirects]]
+  from = "/profile"
+  to = "/templates/profile.html"
+  status = 200
+
+# Security Headers for Glassmorphism Assets & Google GenAI API
+[[headers]]
+  for = "/*"
+    [headers.values]
+      Access-Control-Allow-Origin = "*"
+      Access-Control-Allow-Headers = "Content-Type, Authorization"
+      Access-Control-Allow-Methods = "GET, POST, OPTIONS"
