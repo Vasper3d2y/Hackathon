@@ -53,11 +53,17 @@ async function loadSubjects() {
     if (!subjectGrid) return;
 
     try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2500);
+
         let response;
         try {
-            response = await fetch(`${API_BASE}/api/subjects`);
-        } catch (err) {
-            response = await fetch(`http://127.0.0.1:5050/api/subjects`);
+            response = await fetch(`${API_BASE}/api/subjects`, { signal: controller.signal });
+            clearTimeout(timeoutId);
+        } catch (netErr) {
+            clearTimeout(timeoutId);
+            renderFallbackSubjects();
+            return;
         }
 
         const data = await response.json();
@@ -72,6 +78,7 @@ async function loadSubjects() {
         renderFallbackSubjects();
     }
 }
+
 
 function renderSubjectsGrid(subjects) {
     subjectGrid.innerHTML = "";
