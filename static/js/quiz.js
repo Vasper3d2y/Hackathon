@@ -5,8 +5,10 @@ let currentSubject = localStorage.getItem("subject") || "C programming";
 let studentName = localStorage.getItem("studentName") || "Student";
 let rollNumber = localStorage.getItem("rollNumber") || "00000";
 
-// Handle dynamic port or static preview URL
-const API_BASE = (window.location.port === "5050") ? "" : "http://127.0.0.1:5050";
+const API_BASE = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+    ? (window.location.port === "5050" ? "" : "http://127.0.0.1:5050")
+    : "https://hackathon-in7t.onrender.com";
+
 
 const subjectBadge = document.getElementById("quizSubjectBadge");
 const subjectTag = document.getElementById("subjectNameTag");

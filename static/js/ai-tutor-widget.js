@@ -229,9 +229,12 @@
         const selectedSubject = localStorage.getItem('selectedSubject') || 'General Knowledge';
 
         let apiUrl = '/api/tutor/chat';
-        if (window.location.port !== '5050' && window.location.hostname) {
-            apiUrl = `${window.location.protocol}//${window.location.hostname}:5050/api/tutor/chat`;
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+            apiUrl = 'https://hackathon-in7t.onrender.com/api/tutor/chat';
+        } else if (window.location.port !== '5050') {
+            apiUrl = 'http://127.0.0.1:5050/api/tutor/chat';
         }
+
 
         try {
             let response;

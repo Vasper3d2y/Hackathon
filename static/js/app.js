@@ -6,7 +6,10 @@ const batchInput = document.getElementById("batch");
 const loginBtn = document.getElementById("loginBtn");
 const feedbackEl = document.getElementById("loginFeedback");
 
-const API_BASE = (window.location.port === "5050") ? "" : "http://127.0.0.1:5050";
+const API_BASE = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+    ? (window.location.port === "5050" ? "" : "http://127.0.0.1:5050")
+    : "https://hackathon-in7t.onrender.com";
+
 
 // ENTER KEY NAVIGATION
 if (nameInput) {
