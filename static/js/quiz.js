@@ -202,10 +202,20 @@ if (submitBtn) {
             console.error("Error saving result to DB:", e);
         }
 
-        // Save detailed results locally for results page
+        // Save detailed results locally for results & profile page
         localStorage.setItem("quizScore", score);
         localStorage.setItem("quizTotal", questions.length);
         localStorage.setItem("quizDetails", JSON.stringify(details));
+
+        const localHistory = JSON.parse(localStorage.getItem("localHistory") || "[]");
+        localHistory.unshift({
+            subject: currentSubject,
+            score: score,
+            total: questions.length,
+            percentage: Math.round((score / questions.length) * 100),
+            submitted_at: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        });
+        localStorage.setItem("localHistory", JSON.stringify(localHistory));
 
         // Navigate to result page
         if (window.location.pathname.endsWith(".html") || window.location.protocol === "file:") {
@@ -213,6 +223,7 @@ if (submitBtn) {
         } else {
             window.location.href = "/result";
         }
+
     });
 }
 

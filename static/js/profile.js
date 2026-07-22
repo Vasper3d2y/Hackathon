@@ -137,29 +137,90 @@ async function loadProfileData() {
                         </div>
                     `;
                     historyContainer.appendChild(card);
-                });
             }
 
         } else {
-            showErrorState("Unable to load profile data from backend database.");
+            renderLocalProfileFallback();
         }
 
     } catch (err) {
-        console.error("Error loading user profile:", err);
-        showErrorState("Could not connect to database server.");
+        console.warn("Backend database offline or static Netlify host, rendering local profile fallback:", err);
+        renderLocalProfileFallback();
     }
 }
 
-function showErrorState(msg) {
+function renderLocalProfileFallback() {
+    const history = JSON.parse(localStorage.getItem("localHistory") || "[]");
+    
+    // Compute local metrics
+    const totalTests = history.length;
+    let totalScore = 0;
+    let totalQuestions = 0;
+    let passedCount = 0;
+
+    history.forEach(attempt => {
+        totalScore += attempt.score;
+        totalQuestions += attempt.total;
+        if (attempt.percentage >= 60) passedCount++;
+    });
+
+    const avgPct = totalQuestions > 0 ? Math.round((totalScore / totalQuestions) * 100) : 0;
+
+    if (statTotalTests) statTotalTests.textContent = totalTests;
+    if (statAvgScore) statAvgScore.textContent = `${avgPct}%`;
+    if (statPassCount) statPassCount.textContent = passedCount;
+
     if (historyContainer) {
-        historyContainer.innerHTML = `
-            <div style="text-align: center; padding: 30px; background: white; border-radius: 16px; border: 1px solid var(--border);">
-                <p style="color: #ef4444; font-weight: 700; margin-bottom: 10px;">⚠️ ${msg}</p>
-                <button onclick="loadProfileData()" class="secondary-btn" style="width: auto; padding: 8px 20px;">Retry Connection 🔄</button>
-            </div>
-        `;
+        if (history.length === 0) {
+            historyContainer.innerHTML = `
+                <div style="text-align: center; padding: 36px; background: white; border-radius: 16px; border: 1px solid var(--border);">
+                    <p style="font-size: 16px; color: #64748b; margin-bottom: 12px;">No quiz attempts recorded yet.</p>
+                    <button onclick="window.location.href='subjects.html'" class="primary-btn" style="width: auto; padding: 10px 24px;">Start Your First Quiz ⚡</button>
+                </div>
+            `;
+            return;
+        }
+
+        historyContainer.innerHTML = "";
+        history.forEach((attempt, index) => {
+            const card = document.createElement("div");
+            const isPassed = attempt.percentage >= 60;
+            card.className = `review-card ${isPassed ? 'correct-card' : 'wrong-card'}`;
+            card.style.display = "flex";
+            card.style.justifyContent = "space-between";
+            card.style.alignItems = "center";
+            card.style.flexWrap = "wrap";
+            card.style.gap = "14px";
+            card.style.padding = "20px 24px";
+            card.style.borderRadius = "14px";
+            card.style.background = "#ffffff";
+            card.style.border = "1px solid var(--border)";
+
+            const statusTag = isPassed
+                ? `<span class="tag-correct" style="padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 13px;">Passed (${attempt.percentage}%)</span>`
+                : `<span class="tag-wrong" style="padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 13px;">Needs Improvement (${attempt.percentage}%)</span>`;
+
+            card.innerHTML = `
+                <div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                        <span style="font-size: 12px; font-weight: 800; background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 6px;">Test #${history.length - index}</span>
+                        <h3 style="margin: 0; font-size: 18px; font-weight: 800; color: var(--text-main);">${escapeHtml(attempt.subject)}</h3>
+                    </div>
+                    <span style="font-size: 13px; color: #64748b;">Completed at: <strong>${attempt.submitted_at ? attempt.submitted_at : 'Recent'}</strong></span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div style="text-align: right;">
+                        <div style="font-size: 20px; font-weight: 900; color: var(--text-main);">${attempt.score} / ${attempt.total}</div>
+                        <div style="font-size: 12px; color: #64748b;">Score</div>
+                    </div>
+                    ${statusTag}
+                </div>
+            `;
+            historyContainer.appendChild(card);
+        });
     }
 }
+
 
 function escapeHtml(str) {
     return str
