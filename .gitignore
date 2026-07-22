@@ -1,5 +1,7 @@
 # Environment variables
-# .env (tracked with placeholder keys)
+.env
+.env.local
+
 
 
 # Python bytecode & cache

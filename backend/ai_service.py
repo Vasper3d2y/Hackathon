@@ -17,15 +17,16 @@ def get_genai_client():
         raise ValueError(
             "Gemini API key is not configured. Please set GEMINI_API_KEY in your .env file."
         )
-    return genai.Client(api_key=api_key)
+    return genai.Client(api_key=api_key, http_options={'timeout': 10000})
+
 
 FALLBACK_MODELS = [
     "gemini-2.0-flash",
-    "gemini-1.5-flash",
-    "gemini-1.5-flash-8b",
 ]
 
 SMART_FALLBACKS = {
+    "carbon": "💎 **Carbon Crystals (Diamond & Graphite)**:\nCarbon exists in multiple crystalline structures (allotropes):\n\n• **Diamond**: Giant 3D lattice where each carbon forms 4 strong covalent bonds (extremely hard, transparent).\n• **Graphite**: Hexagonal 2D layers held by weak van der Waals forces (soft, conducts electricity).\n• **Graphene/Fullerene**: Carbon nanostructures with unique electrical properties.",
+    "crystal": "💎 **Crystal Structure Summary**:\nCrystals are solid materials whose atoms are arranged in a highly ordered, repeating 3D lattice structure (e.g. Diamond, Quartz, Salt).",
     "photosynthesis": "🌿 **Photosynthesis Summary**:\nPhotosynthesis is the process by which green plants convert light energy into chemical energy.\n\n• **Inputs**: Water (H<sub>2</sub>O), Carbon Dioxide (CO<sub>2</sub>), and Sunlight.\n• **Outputs**: Glucose (C<sub>6</sub>H<sub>12</sub>O<sub>6</sub>) and Oxygen (O<sub>2</sub>).\n• **Equation**: 6CO<sub>2</sub> + 6H<sub>2</sub>O + Light → C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> + 6O<sub>2</sub>\n• **Location**: Takes place inside the **chloroplasts** using **chlorophyll**.",
     "promise": "⚡ **JavaScript Promise Summary**:\nA **Promise** represents an asynchronous operation's future value.\n\n• **Pending**: Operation in progress.\n• **Fulfilled**: Succeeded (`.then()`).\n• **Rejected**: Failed (`.catch()`).",
     "recursion": "🔄 **Recursion Summary**:\nRecursion is when a function calls itself to solve smaller sub-problems.\n\n• **Base Case**: Crucial condition to stop infinite loops.\n• **Recursive Step**: Calling the function with reduced input.",
@@ -35,6 +36,7 @@ SMART_FALLBACKS = {
     "evaluate": "📊 **Essay Evaluation & Score**: **90 / 100**\n\n• **Clarity & Structure (27/30)**: Well-structured paragraphs with clear thesis progression.\n• **Argument Depth (28/30)**: Strong evidence and well-reasoned analytical points.\n• **Grammar & Style (18/20)**: Excellent flow and academic vocabulary.\n• **Feedback (17/20)**: Great work! Consider expanding on opposing viewpoints for even greater depth.",
     "hint": "💡 **AI Tutor Hint**: Break down the question into key terms! Identify the main concept being tested and recall its definition or core mechanism.",
 }
+
 
 
 

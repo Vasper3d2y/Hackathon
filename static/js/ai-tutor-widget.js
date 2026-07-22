@@ -228,16 +228,35 @@
         const studentName = localStorage.getItem('studentName') || 'Student';
         const selectedSubject = localStorage.getItem('selectedSubject') || 'General Knowledge';
 
+        let apiUrl = '/api/tutor/chat';
+        if (window.location.port !== '5050' && window.location.hostname) {
+            apiUrl = `${window.location.protocol}//${window.location.hostname}:5050/api/tutor/chat`;
+        }
+
         try {
-            const response = await fetch('/api/tutor/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    message: text,
-                    subject: selectedSubject,
-                    student_name: studentName
-                })
-            });
+            let response;
+            try {
+                response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: text,
+                        subject: selectedSubject,
+                        student_name: studentName
+                    })
+                });
+            } catch (e1) {
+                response = await fetch('/api/tutor/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: text,
+                        subject: selectedSubject,
+                        student_name: studentName
+                    })
+                });
+            }
+
 
             const data = await response.json();
             removeTypingIndicator();

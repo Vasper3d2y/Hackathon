@@ -105,10 +105,9 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-# .env (placeholder key tracked)
+.env
+!.env.example
 
-!# .env (placeholder key tracked)
-.example
 .venv
 .venv*
 env/
