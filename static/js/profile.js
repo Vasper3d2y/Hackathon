@@ -21,10 +21,7 @@ const statAvgScore = document.getElementById("statAvgScore");
 const statPassCount = document.getElementById("statPassCount");
 const historyContainer = document.getElementById("profileHistoryContainer");
 
-const userIdentifier = (localEmail && localEmail !== "Not Provided") 
-    ? localEmail 
-    : ((rollNumber && rollNumber !== "000") ? rollNumber : "101");
-
+const userIdentifier = localStorage.getItem("email") || localStorage.getItem("studentName") || localStorage.getItem("rollNumber") || "Student";
 
 // Set initial fallback values from local storage
 if (profStudentName) profStudentName.textContent = localName;
@@ -47,7 +44,7 @@ async function loadProfileData() {
 
     try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2000);
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
 
         let response;
         try {
@@ -58,6 +55,7 @@ async function loadProfileData() {
             renderLocalProfileFallback();
             return;
         }
+
 
         const data = await response.json();
 
